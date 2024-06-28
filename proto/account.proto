@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package account;
+
+service AccountService{
+  rpc PostCreateAccount (PostAccountDTO) returns (Account) {}
+  rpc GetAccounts (Empty) returns (Accounts) {}
+}
+
+message Account{
+  int32 id=1;
+  string accountName=2;
+  bool isActive=3;
+}
+
+message Accounts{
+  repeated Account Accounts=1;
+}
+
+message PostAccountDTO{
+  string accountName=1;
+  bool isActive=2;
+}
+
+message Empty {}
