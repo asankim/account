@@ -1,27 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Account, Accounts, PostAccountDTO } from 'proto/account';
+import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class AppService {
-  private accounts: Account[] = [
-    {
-      id: 1,
-      accountName: 'Account1',
-      isActive: true,
-    },
-  ];
+  constructor(private prismaservice: PrismaService) {}
 
-  postCreateAccount(postAccountDTO: PostAccountDTO): Account {
-    const account: Account = {
-      id: this.accounts.length + 1,
-      accountName: postAccountDTO.accountName,
-      isActive: postAccountDTO.isActive,
-    };
-    this.accounts.push(account);
-    return account;
+  async postCreateAccount(postAccountDTO: PostAccountDTO): Promise<Account> {
+    return this.prismaservice.account.create({
+      data: {
+        accountName: postAccountDTO.accountName,
+        isActive: postAccountDTO.isActive,
+      },
+    });
   }
 
-  getAccounts(): Accounts {
-    return { Accounts: this.accounts };
+  async getAccounts(): Promise<Account> {
+    return { Accounts: this.prismaservice.account.findMany() };
   }
 }
