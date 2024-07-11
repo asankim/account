@@ -6,15 +6,16 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../node_modules/.prisma/client"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model Account{
-  id Int @id @default(autoincrement())
-  accountName String
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  accountName String @unique
   isActive Boolean
 }

@@ -1,4 +1,3 @@
-version: '3'
 services:
   rabbitmq:
     image: 'rabbitmq:3-management'
@@ -18,8 +17,6 @@ services:
       dockerfile: ./apps/account/Dockerfile
     ports:
       - '4001:4001'
-    environment:
-      DATABASE_URL: file:./prisma/account.db
     env_file:
       - .env
     depends_on:
@@ -27,8 +24,6 @@ services:
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
-      - ./proto:/proto
-      - ./prisma:/prisma
     command: npm run start:dev account
 
   api:
@@ -46,5 +41,36 @@ services:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
       - ./proto:/proto
-      - ./prisma:/prisma
     command: npm run start:dev api
+
+  mongo:
+    build:
+      context: ./mongodb_rs
+      args:
+        MONGO_VERSION: 4
+    environment:
+      MONGO_REPLICA_HOST: 127.0.0.1
+      MONGO_REPLICA_PORT: 27017
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: mongo
+      # Use "mongo" instead of "mongosh" before v5.0
+      MONGO_COMMAND: 'mongo'
+    ports:
+      - '27017:27017'
+    restart: unless-stopped
+    healthcheck:
+      # Use "mongo" instead of "mongosh" before v5.0
+      test:
+        [
+          'CMD',
+          'mongo',
+          'admin',
+          '--port',
+          '27017',
+          '--eval',
+          "db.adminCommand('ping').ok",
+        ]
+      interval: 5s
+      timeout: 2s
+      retries: 20
