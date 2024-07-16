@@ -1,6 +1,9 @@
 {
   "name": "account",
   "version": "0.0.1",
+  "prisma": {
+    "seed": "./prisma/seed.ts"
+  },
   "description": "",
   "author": "",
   "private": true,

@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 
 export class Account implements Prisma.AccountCreateInput {
-  id: number;
+  id: string;
   accountName: string;
   isActive: boolean;
 }

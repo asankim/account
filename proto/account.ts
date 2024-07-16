@@ -5,13 +5,13 @@
 // source: proto/account.proto
 
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
-export const protobufPackage = "account";
+export const protobufPackage = 'account';
 
 export interface Account {
-  id: number;
+  id: string;
   accountName: string;
   isActive: boolean;
 }
@@ -25,10 +25,9 @@ export interface PostAccountDTO {
   isActive: boolean;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
-export const ACCOUNT_PACKAGE_NAME = "account";
+export const ACCOUNT_PACKAGE_NAME = 'account';
 
 export interface AccountServiceClient {
   postCreateAccount(request: PostAccountDTO): Observable<Account>;
@@ -37,24 +36,42 @@ export interface AccountServiceClient {
 }
 
 export interface AccountServiceController {
-  postCreateAccount(request: PostAccountDTO): Promise<Account> | Observable<Account> | Account;
+  postCreateAccount(
+    request: PostAccountDTO,
+  ): Promise<Account> | Observable<Account> | Account;
 
-  getAccounts(request: Empty): Promise<Accounts> | Observable<Accounts> | Accounts;
+  getAccounts(
+    request: Empty,
+  ): Promise<Accounts> | Observable<Accounts> | Accounts;
 }
 
 export function AccountServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["postCreateAccount", "getAccounts"];
+    const grpcMethods: string[] = ['postCreateAccount', 'getAccounts'];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("AccountService", method)(constructor.prototype[method], method, descriptor);
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(
+        constructor.prototype,
+        method,
+      );
+      GrpcMethod('AccountService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("AccountService", method)(constructor.prototype[method], method, descriptor);
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(
+        constructor.prototype,
+        method,
+      );
+      GrpcStreamMethod('AccountService', method)(
+        constructor.prototype[method],
+        method,
+        descriptor,
+      );
     }
   };
 }
 
-export const ACCOUNT_SERVICE_NAME = "AccountService";
+export const ACCOUNT_SERVICE_NAME = 'AccountService';

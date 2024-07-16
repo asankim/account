@@ -8,7 +8,7 @@ service AccountService{
 }
 
 message Account{
-  int32 id=1;
+  string id=1;
   string accountName=2;
   bool isActive=3;
 }
